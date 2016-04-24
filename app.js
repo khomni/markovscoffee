@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var twitter = require('twitter');
 
-// var routes = require('./routes/index');
+var routes = require('./routes/index');
 
 require('dotenv').config();
 
