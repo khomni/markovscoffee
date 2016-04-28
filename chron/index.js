@@ -1,19 +1,23 @@
-var Twitter = require('twitter');
-client = new Twitter({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-});
+/*
+CHRON
+  Each file contained in this folder should export a function
+*/
 
-var schedule = function() {
+var fs = require('fs');
+var path = require('path');
+var basename = path.basename(module.filename);
+var env = process.env.NODE_ENV || 'development';
 
-  timexe("* * * 12",function(){
-    client.post('statuses/update', {status: 'I Love Twitter'}, function(error, tweet, response) {
+var index = {};
 
-    }
+fs.readdirSync(__dirname).filter(function(file) {
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
+  .forEach(function(file) {
+    var fileName = file.split('.')[0]
+    var allEnv =  require('./'+file)
+    var fileConfig = allEnv[env] || allEnv['default'] || allEnv
+    index[fileName] = fileConfig;
+  });
 
-}
-
-module.exports = schedule
+module.exports = index
