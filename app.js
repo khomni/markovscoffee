@@ -11,6 +11,9 @@ var routes = require('./routes/index');
 require('dotenv').config();
 
 var app = express();
+global.appRoot = path.resolve(__dirname);
+
+console.log(appRoot)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,7 +32,6 @@ app.use('/', routes);
 
 var schedules = require('./chron')
 for(s in schedules) {
-  // console.log(s+":",schedules[s])
   schedules[s](app)
 }
 
