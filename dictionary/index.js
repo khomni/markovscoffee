@@ -6,7 +6,7 @@ var env = process.env.NODE_ENV || 'development';
 var index = [];
 
 fs.readdirSync(__dirname).filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-4) === '.txt');
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-5) === '.mark' || file.slice(-4) === '.txt');
   })
   .forEach(function(file) {
     console.log("file:",__dirname+'/'+file)
