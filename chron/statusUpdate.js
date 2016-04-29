@@ -6,10 +6,13 @@ var Chain = require('markov-chains').default;
 
 var statusUpdate = function(app) {
   console.log('[CHRON] statusUpdate scheduled');
-  var dictionary = require(appRoot + '/dictionary').map(function(sentence){return sentence.split(' ')})
+  var dictionary = require(appRoot + '/dictionary')
+  // console.log(dictionary)
   var chain = new Chain(dictionary);
-  var phrase = chain.walk();
-  console.log(phrase.join(' '))
+  // console.log(dictionary)
+  for(i=0;i<20;i++) {
+    console.log('['+(i+1)+'] ', chain.walk().join(' '))
+  }
 
   timexe("* * * 12",function(){
     var coffeeMarkov = null // TODO: markov
