@@ -5,12 +5,12 @@ var env = process.env.NODE_ENV || 'development';
 
 var index = [];
 
+console.log('[MARKOV] Generating dictionary')
+
 fs.readdirSync(__dirname).filter(file => {
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-5) === '.mark' || file.slice(-4) === '.txt');
   })
   .forEach(function(file) {
-    console.log("file:",__dirname+'/'+file)
-
     var split = {
       word: /\b[\s\W]+\b/gi,
       whitespace: /\s+/gi,
@@ -34,7 +34,6 @@ fs.readdirSync(__dirname).filter(file => {
     for(s in processedData) {
       index.push(processedData[s]); // push array to index
     }
-    console.log(index.length)
 
 });
 

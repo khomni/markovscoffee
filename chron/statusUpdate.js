@@ -13,7 +13,7 @@ var statusUpdate = function(app) {
 
   timexe("* * * * * /30", function() {
     var now = new Date()
-    console.log('['+now.toString().split(' ')[4]+'] ', chain.walk().join(' '))
+    console.log('['+now.toString().split(' ')[4]+']', chain.walk().join(' '))
   });
 
   // timexe("* * * 12",function(){
