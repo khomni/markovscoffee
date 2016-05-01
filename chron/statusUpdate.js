@@ -8,16 +8,11 @@ var statusUpdate = function(app) {
   console.log('[CHRON] statusUpdate scheduled');
   var dictionary = require(appRoot + '/dictionary')
   var chain = new Chain(dictionary);
-  // console.log("interval:", app.get('interval'))
-  // timexe("* * * * * /" + app.get('interval'), function() {
-  //   var now = new Date()
-  //   console.log('['+now.toString().split(' ')[4]+']', chain.walk().join(' '))
-  // });
 
   var client = app.get('config').twitter
-  timexe("* * * * * /" + app.get('interval'), function() {
+  timexe("* * * /4", function() {
 
-    var coffeeMarkov = null // TODO: markov
+    var coffeeMarkov = null
 
     var Tweet = function(body) {
       this.body = body;
@@ -55,12 +50,12 @@ var statusUpdate = function(app) {
 
     console.log("["+coffeeMarkov.body.length+"]",coffeeMarkov.body);
 
-    // client.post('statuses/update', {status: coffeeMarkov}, function(error, tweet, response) {
-    //   if(error){
-    //     console.error(error);
-    //   }
-    //   console.log(tweet);
-    // })
+    client.post('statuses/update', {status: coffeeMarkov}, function(error, tweet, response) {
+      if(error){
+        console.error(error);
+      }
+      console.log(tweet);
+    })
   });
 }
 
