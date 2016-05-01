@@ -7,24 +7,60 @@ var Chain = require('markov-chains').default;
 var statusUpdate = function(app) {
   console.log('[CHRON] statusUpdate scheduled');
   var dictionary = require(appRoot + '/dictionary')
-  // console.log(dictionary)
   var chain = new Chain(dictionary);
-  // console.log(dictionary)
-
-  timexe("* * * * * /" + app.get('interval'), function() {
-    var now = new Date()
-    console.log('['+now.toString().split(' ')[4]+']', chain.walk().join(' '))
-  });
+  // console.log("interval:", app.get('interval'))
+  // timexe("* * * * * /" + app.get('interval'), function() {
+  //   var now = new Date()
+  //   console.log('['+now.toString().split(' ')[4]+']', chain.walk().join(' '))
+  // });
 
   var client = app.get('config').twitter
-  timexe("* * * 12",function(){
+  timexe("* * * * * /" + app.get('interval'), function() {
+
     var coffeeMarkov = null // TODO: markov
-    client.post('statuses/update', {status: coffeeMarkov}, function(error, tweet, response) {
-      if(error){
-        console.error(error);
+
+    var Tweet = function(body) {
+      this.body = body;
+      this.validate = function(){
+        return this.body && (this.body.length <= 140) && (this.body.length >= 3) && this.depth === 0
+      };
+      this.format = function(){
+        this.body = this.body.slice(this.body.search(/\S*\w+.\S*/))
+        this.body = this.body[0].toUpperCase() + this.body.slice(1);
+        this.depth = 0;
+        for(c in this.body) {
+          if (this.body[c] ==='(') this.depth++
+          if (this.body[c] ===')') this.depth--
+        }
+        while(this.depth>0) {
+          this.body = [body.slice(0, -1), ')', this.body.slice(-1)].join('');
+          console.log('[FORMAT] adding parenthasis:',this.body)
+          this.depth--
+        }
+        return this
       }
-      console.log(tweet);
-    })
+      this.addHashtags = function() {
+        // TODO: hashtags
+        return this
+      }
+    }
+
+    var attempts = 0
+    do {
+      attempts++
+      coffeeMarkov = new Tweet(chain.walk().join(' '));
+      coffeeMarkov.format()
+    }
+    while(!coffeeMarkov.validate());
+
+    console.log("["+coffeeMarkov.body.length+"]",coffeeMarkov.body);
+
+    // client.post('statuses/update', {status: coffeeMarkov}, function(error, tweet, response) {
+    //   if(error){
+    //     console.error(error);
+    //   }
+    //   console.log(tweet);
+    // })
   });
 }
 

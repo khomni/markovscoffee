@@ -19,7 +19,7 @@ for(i in args) {
 }
 
 var app = express();
-app.set('interval', options.interval || 30);
+app.set('interval', options.interval || process.env.interval || 30);
 
 global.appRoot = path.resolve(__dirname);
 
