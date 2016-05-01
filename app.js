@@ -9,8 +9,18 @@ var timexe = require('timexe');
 var routes = require('./routes/index');
 
 require('dotenv').config();
+var args = process.argv.slice(2);
+var options = {}
+for(i in args) {
+  if(/^\-\-.+\=.+/.test(args[i])) {
+    split = args[i].slice(2).split('=')
+    options[split[0]] = split[1]
+  }
+}
 
 var app = express();
+app.set('interval', options.interval || 30);
+
 global.appRoot = path.resolve(__dirname);
 
 // view engine setup
@@ -31,23 +41,8 @@ app.use('/', routes);
 
 var schedules = require('./chron')
 for(s in schedules) {
-  console.log('scheduling '+ s)
   schedules[s](app)
 }
-
-
-// scheduled activity
-timexe("* * * 12",function(){
-  var coffeeMarkov = null // TODO: markov
-  var client = app.get('twitter').client
-  console.log(client)
-  client.post('statuses/update', {status: coffeeMarkov}, function(error, tweet, response) {
-    if(error){
-      console.error(error);
-    }
-    console.log(tweet);
-  })
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
