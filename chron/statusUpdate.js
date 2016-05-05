@@ -38,7 +38,7 @@ var statusUpdate = function(app) {
   }
   var frequency = "* * * /4"
   debugger;
-  timexe("* * * /4", function() {
+  timexe(frequency, function() {
 
     var coffeeMarkov = null
 
